@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Assess risk &middot; Diabetes Risk Prediction{% endblock %}
+
+{% block content %}
+{% if not model_available %}
+  <div class="alert alert-danger" role="alert">
+    <h2 class="h6 mb-2">No trained model found</h2>
+    <p class="mb-2 small">{{ model_message }}</p>
+    <pre class="mb-0 small bg-body p-2 rounded border"><code>python -m src.prepare_data
+python -m src.train --model all</code></pre>
+  </div>
+{% endif %}
+
+{% if errors %}
+  <div class="alert alert-danger" role="alert">
+    <strong>Please correct {{ errors|length }} field{{ 's' if errors|length != 1 }}.</strong>
+    <ul class="mb-0 small mt-2">
+      {% for message in errors.values() %}<li>{{ message }}</li>{% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h1 class="h4 card-title">Patient profile</h1>
+    <p class="text-body-secondary small">
+      All fields are required. Defaults reflect the average patient in the training data,
+      so you can change a handful of values and submit.
+    </p>
+
+    <form method="post" action="{{ url_for('main.predict') }}" novalidate>
+      {% for section, fields in sections.items() %}
+        {% if fields %}
+        <fieldset class="mb-4">
+          <legend class="h6 text-uppercase text-body-secondary border-bottom pb-2">
+            {{ section }}
+          </legend>
+          <div class="row g-3">
+            {% for field in fields %}
+            <div class="col-12 col-md-6 col-xl-4">
+              <label for="{{ field.name }}" class="form-label small fw-medium">
+                {{ field.label }}{% if field.unit is defined and field.unit %}
+                  <span class="text-body-secondary">({{ field.unit }})</span>
+                {% endif %}
+              </label>
+
+              {% if field.choices is defined %}
+                <select
+                  class="form-select {% if errors.get(field.name) %}is-invalid{% endif %}"
+                  id="{{ field.name }}" name="{{ field.name }}">
+                  {% for choice in field.choices %}
+                    <option value="{{ choice }}"
+                      {% if values.get(field.name)|string == choice %}selected{% endif %}>
+                      {{ choice }}
+                    </option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                <input
+                  type="number"
+                  class="form-control {% if errors.get(field.name) %}is-invalid{% endif %}"
+                  id="{{ field.name }}" name="{{ field.name }}"
+                  value="{{ values.get(field.name, '') }}"
+                  min="{{ field.minimum }}" max="{{ field.maximum }}" step="{{ field.step }}">
+              {% endif %}
+
+              {% if errors.get(field.name) %}
+                <div class="invalid-feedback d-block">{{ errors[field.name] }}</div>
+              {% elif field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+        {% endif %}
+      {% endfor %}
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary" {% if not model_available %}disabled{% endif %}>
+          Predict risk band
+        </button>
+        <button type="reset" class="btn btn-outline-secondary">Reset</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

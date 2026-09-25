@@ -1,0 +1,108 @@
+{
+  "computed_at_utc": "2026-09-23T06:14:57+00:00",
+  "scoring": "f1_macro",
+  "n_repeats": 5,
+  "top_k": 20,
+  "importances": [
+    {
+      "feature": "Fasting_Blood_Sugar",
+      "importance_mean": 0.348946,
+      "importance_std": 0.018279
+    },
+    {
+      "feature": "HbA1c",
+      "importance_mean": 0.287013,
+      "importance_std": 0.033201
+    },
+    {
+      "feature": "Age",
+      "importance_mean": 0.152135,
+      "importance_std": 0.011503
+    },
+    {
+      "feature": "Family_History_Diabetes",
+      "importance_mean": 0.133139,
+      "importance_std": 0.015366
+    },
+    {
+      "feature": "BMI",
+      "importance_mean": 0.082676,
+      "importance_std": 0.034566
+    },
+    {
+      "feature": "Diet_Quality",
+      "importance_mean": 0.052006,
+      "importance_std": 0.010462
+    },
+    {
+      "feature": "Physical_Activity_Level",
+      "importance_mean": 0.047924,
+      "importance_std": 0.007611
+    },
+    {
+      "feature": "Blood_Pressure_Systolic",
+      "importance_mean": 0.043466,
+      "importance_std": 0.008988
+    },
+    {
+      "feature": "Hypertension",
+      "importance_mean": 0.041525,
+      "importance_std": 0.014693
+    },
+    {
+      "feature": "Heart_Disease",
+      "importance_mean": 0.036619,
+      "importance_std": 0.005539
+    },
+    {
+      "feature": "Stress_Level",
+      "importance_mean": 0.030261,
+      "importance_std": 0.007824
+    },
+    {
+      "feature": "Smoking_Status",
+      "importance_mean": 0.02701,
+      "importance_std": 0.012855
+    },
+    {
+      "feature": "Total_Cholesterol",
+      "importance_mean": 0.025739,
+      "importance_std": 0.006172
+    },
+    {
+      "feature": "Alcohol_Consumption",
+      "importance_mean": 0.025667,
+      "importance_std": 0.011624
+    },
+    {
+      "feature": "Fatty_Liver",
+      "importance_mean": 0.020871,
+      "importance_std": 0.008742
+    },
+    {
+      "feature": "Medication_Adherence",
+      "importance_mean": 0.012725,
+      "importance_std": 0.007236
+    },
+    {
+      "feature": "Insulin_Level",
+      "importance_mean": 0.012458,
+      "importance_std": 0.002743
+    },
+    {
+      "feature": "PCOS",
+      "importance_mean": 0.011486,
+      "importance_std": 0.015785
+    },
+    {
+      "feature": "Weight_kg",
+      "importance_mean": 0.008951,
+      "importance_std": 0.012912
+    },
+    {
+      "feature": "Blood_Pressure_Diastolic",
+      "importance_mean": 0.007001,
+      "importance_std": 0.007579
+    }
+  ]
+}

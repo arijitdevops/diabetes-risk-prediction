@@ -1,0 +1,41 @@
+/* Small additions on top of Bootstrap 5; the layout itself stays stock. */
+
+body {
+  min-height: 100vh;
+}
+
+main.container {
+  max-width: 1140px;
+}
+
+fieldset legend {
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+}
+
+.progress {
+  height: 0.85rem;
+}
+
+.card {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+dl.row dt {
+  font-weight: 500;
+}
+
+footer {
+  max-width: 1140px;
+}
+
+@media (max-width: 575.98px) {
+  .badge.fs-5 {
+    font-size: 1rem !important;
+  }
+}

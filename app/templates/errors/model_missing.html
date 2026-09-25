@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Model unavailable &middot; Diabetes Risk Prediction{% endblock %}
+{% block content %}
+<div class="card shadow-sm border-danger-subtle">
+  <div class="card-body">
+    <h1 class="h5">No trained model is available</h1>
+    <p class="text-body-secondary small">{{ message }}</p>
+    <p class="mb-2 small">Train one first, from the project root:</p>
+    <pre class="bg-body-tertiary p-3 rounded border small mb-3"><code>python -m src.prepare_data
+python -m src.train --model all
+python -m src.evaluate</code></pre>
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('main.index') }}">
+      Back to the form
+    </a>
+  </div>
+</div>
+{% endblock %}

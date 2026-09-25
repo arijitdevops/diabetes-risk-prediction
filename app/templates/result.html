@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Result &middot; Diabetes Risk Prediction{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h1 class="h5 card-title">Predicted risk band</h1>
+        <p>
+          <span class="badge text-bg-{{ band_style }} fs-5 px-3 py-2">{{ prediction }}</span>
+          {% if confidence is not none %}
+            <span class="ms-2 text-body-secondary small">
+              model confidence {{ '%.1f'|format(confidence * 100) }}%
+            </span>
+          {% endif %}
+        </p>
+        <p class="text-body-secondary small">{{ band_summary }}</p>
+
+        {% if probabilities %}
+          <h2 class="h6 mt-4">Class probabilities</h2>
+          {% for label in class_order %}
+            {% if label in probabilities %}
+            <div class="mb-2">
+              <div class="d-flex justify-content-between small">
+                <span>{{ label }}</span>
+                <span>{{ '%.1f'|format(probabilities[label] * 100) }}%</span>
+              </div>
+              <div class="progress" role="progressbar"
+                   aria-label="{{ label }} probability"
+                   aria-valuenow="{{ (probabilities[label] * 100)|round(1) }}"
+                   aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-{{ band_styles.get(label, 'secondary') }}"
+                     style="width: {{ (probabilities[label] * 100)|round(1) }}%"></div>
+              </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="small text-body-secondary">
+            This estimator does not expose class probabilities.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6 card-title">Top contributing features</h2>
+        {% if drivers %}
+          <p class="text-body-secondary small">
+            {{ drivers[0].source }}. These are model-level drivers across all patients,
+            not an attribution for this individual record.
+          </p>
+          <ol class="list-group list-group-numbered list-group-flush small">
+            {% for driver in drivers %}
+              <li class="list-group-item d-flex justify-content-between align-items-start px-0">
+                <span>{{ driver.feature }}</span>
+                <span class="text-body-secondary">{{ '%.4f'|format(driver.score) }}</span>
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <p class="small text-body-secondary mb-0">
+            Feature importances are unavailable. Run
+            <code>python -m src.evaluate</code> to generate them.
+          </p>
+        {% endif %}
+
+        {% if metadata %}
+          <hr>
+          <dl class="row small mb-0">
+            <dt class="col-6">Estimator</dt>
+            <dd class="col-6">{{ metadata.get('model_name', 'unknown') }}</dd>
+            <dt class="col-6">Trained (UTC)</dt>
+            <dd class="col-6">{{ metadata.get('trained_at_utc', 'unknown') }}</dd>
+            <dt class="col-6">CV {{ metadata.get('cv_scoring', 'score') }}</dt>
+            <dd class="col-6">{{ metadata.get('cv_score', 'n/a') }}</dd>
+          </dl>
+          {% if metadata.get('keep_leakage') %}
+            <div class="alert alert-danger mt-3 mb-0 small">
+              This model was trained with leakage columns enabled. Its output is a
+              demonstration of leakage, not a prediction.
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 card-title">Submitted values</h2>
+        <div class="row g-3">
+          {% for section, fields in sections.items() %}
+            {% if fields %}
+            <div class="col-12 col-md-6 col-xl-4">
+              <h3 class="h6 text-uppercase text-body-secondary small">{{ section }}</h3>
+              <dl class="row small mb-0">
+                {% for field in fields %}
+                  <dt class="col-7 fw-normal text-body-secondary">{{ field.label }}</dt>
+                  <dd class="col-5 text-end">
+                    {{ record.get(field.name) }}{% if field.unit is defined and field.unit %}
+                      <span class="text-body-secondary">{{ field.unit }}</span>
+                    {% endif %}
+                  </dd>
+                {% endfor %}
+              </dl>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <a class="btn btn-outline-primary btn-sm mt-3" href="{{ url_for('main.index') }}">
+          Assess another profile
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
